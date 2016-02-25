@@ -1,12 +1,9 @@
-# AlpineLinux with a glibc-2.21 and Oracle Java 8
-
-FROM alpine:3.3
+FROM korczis/minimal-glibc:latest
 MAINTAINER Tomas Korcak <korczis@gmail.com>
 
-# Install cURL
-RUN apk --update add curl ca-certificates tar && \
-    curl -Ls https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk > /tmp/glibc-2.21-r2.apk && \
-    apk add --allow-untrusted /tmp/glibc-2.21-r2.apk
+## Install cURL
+RUN apk --update add \
+  curl
 
 # Java Version
 ENV JAVA_VERSION_MAJOR 8
