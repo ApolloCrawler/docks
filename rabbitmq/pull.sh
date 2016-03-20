@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker pull dockerfile/rabbitmq
+docker pull korczis/rabbitmq

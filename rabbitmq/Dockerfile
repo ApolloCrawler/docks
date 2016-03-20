@@ -5,10 +5,14 @@
 #
 
 # Pull base image.
-FROM dockerfile/ubuntu
+FROM ubuntu:14.04
 
 # Add files.
 ADD bin/rabbitmq-start /usr/local/bin/
+
+RUN \
+  apt-get update && \
+  apt-get install -y wget
 
 # Install RabbitMQ.
 RUN \
