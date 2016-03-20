@@ -1,4 +1,4 @@
-FROM ubuntu:12.04
+FROM ubuntu:14.04
 
 MAINTAINER Couchbase Docker Team <docker@couchbase.com>
 
@@ -8,10 +8,10 @@ RUN apt-get update && \
     apt-get autoremove && apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV CB_VERSION=4.0.0 \
+ENV CB_VERSION=4.1.0 \
     CB_RELEASE_URL=http://packages.couchbase.com/releases \
-    CB_PACKAGE=couchbase-server-enterprise_4.0.0-ubuntu12.04_amd64.deb \
-    CB_SHA256=30c4e6711d8619bfd432b7b2d4db6a07aac753c45f1f5feabd630d8dd1cbfecc \
+    CB_PACKAGE=couchbase-server-enterprise_4.1.0-ubuntu14.04_amd64.deb \
+    CB_SHA256=beb4ee31b5fea2bfa47c51132d3b29a12e6e2c537b7e5e8dca5d0d50558e4c53 \
     PATH=$PATH:/opt/couchbase/bin:/opt/couchbase/bin/tools:/opt/couchbase/bin/install \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/couchbase/lib
 
