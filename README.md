@@ -10,4 +10,3 @@ Docker in configuration files/applications.
 - [Mongo](https://github.com/korczis/docks/tree/master/mongo)
 - [PostGis](https://github.com/korczis/docks/tree/master/postgis)
 - [RabbitMQ](https://github.com/korczis/docks/tree/master/rabbitmq)
-- [Redis](https://github.com/korczis/docks/tree/master/redis)
