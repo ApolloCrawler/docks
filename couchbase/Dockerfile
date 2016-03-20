@@ -1,36 +1,36 @@
-FROM centos:centos6
+FROM ubuntu:12.04
 
-MAINTAINER Traun Leyden <tleyden@couchbase.com>
+MAINTAINER Couchbase Docker Team <docker@couchbase.com>
 
-ENV CB_VERSION		3.0.1
-ENV CB_RELEASE_URL	http://packages.couchbase.com/releases
-ENV CB_PACKAGE		couchbase-server-community-3.0.1-centos6.x86_64.rpm
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -yq runit wget python-httplib2  && \
+    apt-get autoremove && apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Add couchbase binaries to PATH
-ENV PATH $PATH:/opt/couchbase/bin:/opt/couchbase/bin/tools:/opt/couchbase/bin/install
+ENV CB_VERSION=4.0.0 \
+    CB_RELEASE_URL=http://packages.couchbase.com/releases \
+    CB_PACKAGE=couchbase-server-enterprise_4.0.0-ubuntu12.04_amd64.deb \
+    CB_SHA256=30c4e6711d8619bfd432b7b2d4db6a07aac753c45f1f5feabd630d8dd1cbfecc \
+    PATH=$PATH:/opt/couchbase/bin:/opt/couchbase/bin/tools:/opt/couchbase/bin/install \
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/couchbase/lib
 
-# Install yum dependencies
-RUN yum install -y \
-    hostname \
-    initscripts \
-    openssl \
-    pkgconfig \
-    sudo \
-    tar \
-    wget 
+# Create Couchbase user with UID 1000 (necessary to match default
+# boot2docker UID)
+RUN groupadd -g 1000 couchbase && useradd couchbase -u 1000 -g couchbase -M
 
 # Install couchbase
-RUN rpm --install $CB_RELEASE_URL/$CB_VERSION/$CB_PACKAGE
+RUN wget -N $CB_RELEASE_URL/$CB_VERSION/$CB_PACKAGE && \
+    echo "$CB_SHA256  $CB_PACKAGE" | sha256sum -c - && \
+    dpkg -i ./$CB_PACKAGE && rm -f ./$CB_PACKAGE
 
-# Modify /etc/passwd to add a login shell, otherwise running
-#    su - couchbase -c "/opt/couchbase/bin/couchbase-server -- -noinput"
-# will give an error: 
-#    This account is currently not available.
-# This is only an issue on Couchbase Server 3.x, and it's a no-op on 2.x
-RUN sed -i -e 's/\/opt\/couchbase:\/sbin\/nologin/\/opt\/couchbase:\/bin\/sh/' /etc/passwd
+# Add runit script for couchbase-server
+COPY scripts/run /etc/service/couchbase-server/run
 
-# Add start script
-ADD scripts/couchbase-start /usr/local/bin/
+# Add bootstrap script
+COPY scripts/entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["couchbase-server"]
 
-CMD ["couchbase-start"]
-
+EXPOSE 8091 8092 8093 11207 11210 11211 18091 18092
+VOLUME /opt/couchbase/var
