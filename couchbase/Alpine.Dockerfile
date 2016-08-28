@@ -1,26 +1,18 @@
-FROM ubuntu:14.04
+FROM korczis/minimal-glibc
 
 MAINTAINER Couchbase Docker Team <docker@couchbase.com>
 
-# Install dependencies
-RUN apt-get update && \
-    apt-get install -yq runit wget python-httplib2  && \
-    apt-get autoremove && apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-ENV CB_VERSION=4.5.0 \
+ENV CB_VERSION=4.1.0 \
     CB_RELEASE_URL=http://packages.couchbase.com/releases \
-    CB_PACKAGE=couchbase-server-enterprise_4.5.0-ubuntu14.04_amd64.deb \
-    CB_SHA256=441398302210c0d73f27bdab741b471fc9da116bf45f521b314345f04560716e \
+    CB_PACKAGE=couchbase-server-enterprise_4.1.0-ubuntu14.04_amd64.deb \
+    CB_SHA256=beb4ee31b5fea2bfa47c51132d3b29a12e6e2c537b7e5e8dca5d0d50558e4c53 \
     PATH=$PATH:/opt/couchbase/bin:/opt/couchbase/bin/tools:/opt/couchbase/bin/install \
     LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/couchbase/lib
 
-# Create Couchbase user with UID 1000 (necessary to match default
-# boot2docker UID)
-RUN groupadd -g 1000 couchbase && useradd couchbase -u 1000 -g couchbase -M
+RUN addgroup -g 1000 couchbase && adduser -u 1000 -G couchbase -H -S couchbase
 
 # Install couchbase
-RUN wget -N $CB_RELEASE_URL/$CB_VERSION/$CB_PACKAGE && \
+RUN wget $CB_RELEASE_URL/$CB_VERSION/$CB_PACKAGE && \
     echo "$CB_SHA256  $CB_PACKAGE" | sha256sum -c - && \
     dpkg -i ./$CB_PACKAGE && rm -f ./$CB_PACKAGE
 
