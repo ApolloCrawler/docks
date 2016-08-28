@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker push dockerfile/rabbitmq
+docker push korczis/rabbitmq

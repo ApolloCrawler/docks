@@ -2,8 +2,8 @@
 # Based on ubuntu:latest, installs MongoDB following the instructions from:
 # http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
-FROM       ubuntu:latest
-MAINTAINER Docker
+# Pull base image.
+FROM ubuntu:14.04
 
 # Installation:
 # Import MongoDB public GPG key AND create a MongoDB list file
@@ -24,7 +24,7 @@ RUN mkdir -p /data/db
 ADD mongod.conf /etc/mongod.conf
 
 # Expose port #27017 from the container to the host
-EXPOSE 27017
+EXPOSE 27017 28017
 
 # Set /usr/bin/mongod as the dockerized entry-point application
 ENTRYPOINT ["/usr/bin/mongod"]
