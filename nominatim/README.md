@@ -71,3 +71,7 @@ The following command will keep your database constantly up to date:
 If you have imported multiple country extracts and want to keep them
 up-to-date, have a look at the script in
 [issue #60](https://github.com/twain47/Nominatim/issues/60).
+
+# Notes 
+
+See [Roll-your-own geocoding with OpenStreetMap Nominatim on Amazon EC2](https://andrewwhitby.com/2014/12/18/nominatim-on-ec2/).
